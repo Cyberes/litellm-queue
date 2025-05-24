@@ -1,0 +1,14 @@
+[Unit]
+Description=LiteLLM Queue
+After=network.target
+
+[Service]
+Type=simple
+User=server
+Group=server
+ExecStart=/opt/litellm-queue --config /etc/litellm-queue/config.yml
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

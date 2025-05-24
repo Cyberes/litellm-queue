@@ -2,6 +2,7 @@ package queue
 
 import (
 	"server/backend"
+	"server/config"
 	"sync"
 )
 
@@ -15,7 +16,7 @@ type QueueManager struct {
 }
 
 // NewQueueManager initializes a new QueueManager with model-specific queues.
-func NewQueueManager(modelConfig map[string]int, backendURL string) *QueueManager {
+func NewQueueManager(modelConfig map[string]config.ModelConfigEntry, backendURL string) *QueueManager {
 	qm := &QueueManager{
 		queues:         make(map[string]*RequestQueue),
 		backend:        backend.NewBackendClient(backendURL),
@@ -23,9 +24,9 @@ func NewQueueManager(modelConfig map[string]int, backendURL string) *QueueManage
 	}
 
 	// Initialize queues for each configured model.
-	for model, size := range modelConfig {
+	for model, cfg := range modelConfig {
 		rq := NewRequestQueue(model, qm.backend)
-		for i := 0; i < size; i++ {
+		for i := 0; i < cfg.Size; i++ {
 			go rq.process()
 		}
 		qm.queues[model] = rq
