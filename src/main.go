@@ -1,36 +1,58 @@
 package main
 
 import (
-	"github.com/sirupsen/logrus"
+	"errors"
 	"net/http"
+	"os"
+	"os/signal"
 	"server/handler"
 	"server/logging"
 	"server/queue"
+	"syscall"
+
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	//if config.CliArgs.Debug {
+	// Initialize logger.
 	logging.InitLogger(logrus.DebugLevel)
-	//} else {
-	//	logging.InitLogger(logrus.InfoLevel)
-	//}
 	log := logging.GetLogger()
 
-	// Initialize the request queue
-	reqQueue := queue.NewRequestQueue("https://google.com")
+	// Define the model configuration.
+	modelConfig := map[string]int{
+		"claude-3-sonnet": 2,
+		// Add other models here.
+	}
 
-	// Initialize the HTTP handler with the request queue and backend client
-	httpHandler := handler.NewHTTPHandler(reqQueue)
+	// Initialize the Queue Manager with the model configuration.
+	backendURL := "https://llm.evulid.cc" // Replace with your actual backend URL.
+	reqQueueManager := queue.NewQueueManager(modelConfig, backendURL)
 
-	// Define the server
+	// Initialize the HTTP handler with the Queue Manager.
+	httpHandler := handler.NewHTTPHandler(reqQueueManager)
+
+	// Define the server.
 	server := &http.Server{
 		Addr:    "0.0.0.0:8080",
 		Handler: httpHandler,
 	}
 
-	log.Infoln("Starting server on 0.0.0.0:8080")
-	// Start listening and serving
-	if err := server.ListenAndServe(); err != nil {
-		log.Fatalf("Server failed to start: %v", err)
-	}
+	// Channel to listen for OS signals for graceful shutdown.
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		log.Infoln("Starting server on 0.0.0.0:8080")
+		// Start listening and serving.
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("Server failed to start: %v", err)
+		}
+	}()
+
+	// Block until a signal is received.
+	<-quit
+	log.Infoln("Shutting down server...")
+
+	// Shutdown the Queue Manager.
+	reqQueueManager.Shutdown()
 }

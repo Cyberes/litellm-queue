@@ -1,19 +1,20 @@
 package backend
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
 	"time"
 )
 
-// Client represents a client to communicate with the backend API server
+// Client represents a client to communicate with the backend API server.
 type Client struct {
 	baseURL    string
 	httpClient *http.Client
 }
 
-// NewBackendClient creates a new BackendClient with the specified base URL
+// NewBackendClient creates a new BackendClient with the specified base URL.
 func NewBackendClient(baseURL string) *Client {
 	return &Client{
 		baseURL: baseURL,
@@ -23,25 +24,25 @@ func NewBackendClient(baseURL string) *Client {
 	}
 }
 
-// Forward sends the HTTP request to the backend server and returns the response
-func (c *Client) Forward(method, path string, headers http.Header, body io.Reader) (*http.Response, error) {
-	// Construct the full URL
+// Forward sends the HTTP request to the backend server and returns the response.
+func (c *Client) Forward(ctx context.Context, method, path string, headers http.Header, body io.Reader) (*http.Response, error) {
+	// Construct the full URL.
 	url := fmt.Sprintf("%s%s", c.baseURL, path)
 
-	// Create a new HTTP request
-	req, err := http.NewRequest(method, url, body)
+	// Create a new HTTP request with context.
+	req, err := http.NewRequestWithContext(ctx, method, url, body)
 	if err != nil {
 		return nil, err
 	}
 
-	// Copy headers
+	// Copy headers.
 	for key, values := range headers {
 		for _, value := range values {
 			req.Header.Add(key, value)
 		}
 	}
 
-	// Send the request to the backend
+	// Send the request to the backend.
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
