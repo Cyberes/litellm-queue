@@ -1,3 +1,4 @@
 # litellm-queue
 
-A server that sits in front of LiteLLM and queues requests.
+_A server that sits in front of LiteLLM and queues requests._
+
