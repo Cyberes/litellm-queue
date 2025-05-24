@@ -1,0 +1,11 @@
+# Address that your LiteLLM server is listening on.
+api_root: http://127.0.0.1:8082
+
+# Address that litellm-queue listens on
+listen_address: 127.0.0.1:8080
+
+models:
+  gpt-4.1: # The name of the model that your clients call.
+    size: 2 # Amount of concurrent requests for this model.
+  claude-3-sonnet:
+    size: 2

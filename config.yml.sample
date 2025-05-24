@@ -1,6 +1,0 @@
-api_root: https://llm.example.com
-models:
-  gpt-4.1:
-    size: 2
-  claude-3-sonnet:
-    size: 30

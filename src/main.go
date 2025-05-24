@@ -83,7 +83,7 @@ func main() {
 
 	// Define the server.
 	server := &http.Server{
-		Addr:    "0.0.0.0:8080",
+		Addr:    configData.ListenAddress,
 		Handler: httpHandler,
 	}
 
@@ -92,7 +92,7 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		log.Infoln("Starting server on 0.0.0.0:8080")
+		log.Infof("Starting server on %s", configData.ListenAddress)
 		// Start listening and serving.
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("Server failed to start: %v", err)

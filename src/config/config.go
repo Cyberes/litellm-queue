@@ -21,8 +21,8 @@ func LoadConfig(configFile string) (*Config, error) {
 		viper.SetConfigFile(configFile)
 		viper.SetConfigType("yaml")
 
-		// Set defaults if necessary
 		viper.SetDefault("models", map[string]ModelConfigEntry{})
+		viper.SetDefault("listen_address", "127.0.0.1:8080")
 
 		// Read in the config file
 		err = viper.ReadInConfig()
