@@ -13,7 +13,7 @@ limit your llama.cpp backend to only 1 concurrent request.
 ### Install
 
 1. Download the latest release from the [releases tab](https://git.evulid.cc/cyberes/litellm-queue/releases)
-2. Copy `config.yaml.service` to `config.yaml`
+2. Copy `config.sample.yaml` to `config.yaml`
 3. Start the `litellm-queue` server
 4. Update your reverse proxy for LiteLLM to point to the listen address of `litellm-queue`
 

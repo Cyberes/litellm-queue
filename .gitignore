@@ -1,5 +1,5 @@
 .idea
 config.y*
-!config.yaml.sample
+!config.sample.yaml
 test*.sh
 dist/

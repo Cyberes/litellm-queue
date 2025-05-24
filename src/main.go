@@ -77,23 +77,18 @@ func main() {
 	}
 
 	reqQueueManager := queue.NewQueueManager(configData.Models, configData.APIRoot)
-
-	// Initialize the HTTP handler with the Queue Manager.
 	httpHandler := handler.NewHTTPHandler(reqQueueManager)
 
-	// Define the server.
-	server := &http.Server{
-		Addr:    configData.ListenAddress,
-		Handler: httpHandler,
-	}
-
-	// Channel to listen for OS signals for graceful shutdown.
+	// Listen for OS signals for graceful shutdown.
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
+		server := &http.Server{
+			Addr:    configData.ListenAddress,
+			Handler: httpHandler,
+		}
 		log.Infof("Starting server on %s", configData.ListenAddress)
-		// Start listening and serving.
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("Server failed to start: %v", err)
 		}
@@ -102,7 +97,5 @@ func main() {
 	// Block until a signal is received.
 	<-quit
 	log.Infoln("Shutting down server...")
-
-	// Shutdown the Queue Manager.
 	reqQueueManager.Shutdown()
 }

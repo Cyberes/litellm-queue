@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=server
 Group=server
-ExecStart=/opt/litellm-queue --config /etc/litellm-queue/config.yml
+ExecStart=/opt/litellm-queue --config /etc/litellm-queue/config.yaml
 Restart=always
 RestartSec=5s
 

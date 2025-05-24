@@ -5,7 +5,7 @@ api_root: http://127.0.0.1:8082
 listen_address: 127.0.0.1:8080
 
 models:
-  gpt-4.1: # The name of the model that your clients call.
-    size: 2 # Amount of concurrent requests for this model.
-  claude-3-sonnet:
-    size: 2
+  - name: gpt-4.1 # The name of the model that your clients call.
+    size: 10 # Amount of concurrent requests for this model.
+  - name: Beepo-22B
+    size: 1
