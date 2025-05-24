@@ -18,3 +18,8 @@ limit your llama.cpp backend to only 1 concurrent request.
 4. Update your reverse proxy for LiteLLM to point to the listen address of `litellm-queue`
 
 An example systemd service is provided.
+
+### Build
+
+1. `./build.sh`
+2. Compiled binary will be at `dist/litellm-queue-0.0.0-...`
