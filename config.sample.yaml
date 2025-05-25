@@ -1,5 +1,5 @@
 # Address that your LiteLLM server is listening on.
-api_root: http://127.0.0.1:8082
+backend_url: http://127.0.0.1:8082
 
 # Address that litellm-queue listens on
 listen_address: 127.0.0.1:8080

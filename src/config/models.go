@@ -8,7 +8,7 @@ type ModelConfigEntry struct {
 
 // Config holds the application configuration.
 type Config struct {
-	APIRoot       string             `mapstructure:"api_root"`
+	BackendURL    string             `mapstructure:"backend_url"`
 	ListenAddress string             `mapstructure:"listen_address"`
 	Models        []ModelConfigEntry `mapstructure:"models"`
 }

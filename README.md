@@ -17,6 +17,13 @@ limit your llama.cpp backend to only 1 concurrent request.
 3. Start the `litellm-queue` server
 4. Update your reverse proxy for LiteLLM to point to the listen address of `litellm-queue`
 
+**Example Nginx Config:**
+```
+location ~ ^/(v1/)?(chat/)?completions {
+    proxy_pass http://127.0.0.1:8080;
+}
+```
+
 An example systemd service is provided.
 
 ### Build

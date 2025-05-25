@@ -1,4 +1,4 @@
-package queue
+package manager
 
 import (
 	"github.com/sirupsen/logrus"

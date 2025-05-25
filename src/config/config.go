@@ -39,8 +39,8 @@ func LoadConfig(configFile string) (*Config, error) {
 		}
 
 		// Validation
-		if configuration.APIRoot == "" {
-			err = errors.New("api_root is required")
+		if configuration.BackendURL == "" {
+			err = errors.New("backend_url is required")
 			return
 		}
 

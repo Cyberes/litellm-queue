@@ -12,7 +12,7 @@ import (
 	"server/config"
 	"server/handler"
 	"server/logging"
-	"server/queue"
+	"server/manager"
 	"syscall"
 
 	"github.com/sirupsen/logrus"
@@ -68,7 +68,7 @@ func main() {
 		} else if _, err := os.Stat(filepath.Join(exeDir, "config.yaml")); err == nil {
 			config.CliArgs.ConfigFile = filepath.Join(exeDir, "config.yaml")
 		} else {
-			log.Fatalln("No config file found in the executable directory. Please place config.yaml next to the executeable or set the path to the config with the --config flag.")
+			log.Fatalln("No config file found in the executable directory. Please place config.yaml next to the executable or set the path to the config with the --config flag.")
 		}
 	}
 	configData, err := config.LoadConfig(config.CliArgs.ConfigFile)
@@ -76,8 +76,11 @@ func main() {
 		log.Fatalf(`Failed to load config: %s`, err)
 	}
 
-	reqQueueManager := queue.NewQueueManager(configData.Models, configData.APIRoot)
-	httpHandler := handler.NewHTTPHandler(reqQueueManager)
+	// Initialize the ConcurrencyManager with model configurations
+	defaultConcurrency := 100
+	concurrencyManager := manager.NewConcurrencyManager(configData.Models, defaultConcurrency)
+
+	httpHandler := handler.NewHTTPHandler(concurrencyManager, configData.BackendURL)
 
 	// Listen for OS signals for graceful shutdown.
 	quit := make(chan os.Signal, 1)
@@ -97,5 +100,5 @@ func main() {
 	// Block until a signal is received.
 	<-quit
 	log.Infoln("Shutting down server...")
-	reqQueueManager.Shutdown()
+	concurrencyManager.Shutdown()
 }
