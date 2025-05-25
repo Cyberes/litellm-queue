@@ -4,9 +4,8 @@ import (
 	"net/http"
 )
 
-func logRequest(req *http.Request) {
-	// TODO: log model
-	log.Infof("%s -- %s -- %s", req.RemoteAddr, req.Method, req.URL.Path)
+func logRequest(req *http.Request, model string) {
+	log.Infof("%s -- %s -- %s -- %s", model, req.RemoteAddr, req.Method, req.URL.Path)
 }
 
 func logAndReturnError(w http.ResponseWriter, r *http.Request, httpResponseStr string, code int, consoleStr ...string) {

@@ -8,7 +8,10 @@ running inference servers such as llama.cpp will be quickly overwhelmed.
 
 This is a simple queuing server that sits in front of your LiteLLM server and reads the `model` header of incoming
 requests to route them to per-model queues. For example, you can limit the model `gpt-4.1` to 4 concurrent requests or
-limit your llama.cpp backend to only 1 concurrent request.
+limit the model `Beepo-22B` on your llama.cpp backend to only 1 concurrent request.
+
+This is not a perfect solution and hopefully queuing is added to LiteLLM soon. Every effort is made to make streaming
+smooth.
 
 ### Install
 
@@ -18,6 +21,7 @@ limit your llama.cpp backend to only 1 concurrent request.
 4. Update your reverse proxy for LiteLLM to point to the listen address of `litellm-queue`
 
 **Example Nginx Config:**
+
 ```
 location ~ ^/(v1/)?(chat/)?completions {
     proxy_pass http://127.0.0.1:8080;

@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"server/config" // Adjust the import path based on your project structure
+	"server/config"
 )
 
 // ModelMetrics holds the metrics for a specific model.
@@ -38,7 +38,7 @@ func NewConcurrencyManager(modelConfigs []config.ModelConfigEntry, defaultSize i
 		// Validate size
 		size := cfg.Size
 		if size <= 0 {
-			size = 10 // Set a sensible default if invalid
+			size = 10
 			log.Warnf("Model '%s' has invalid size %d. Setting to default size %d.", cfg.Name, cfg.Size, size)
 		}
 		cm.semMap[cfg.Name] = make(chan struct{}, size)
@@ -73,7 +73,6 @@ func (cm *ConcurrencyManager) Acquire(model string) (func(), bool) {
 	metrics := cm.metricsMap[model]
 	cm.mu.Unlock()
 
-	// Increment queue size
 	metrics.incrementQueue()
 
 	select {
@@ -96,7 +95,7 @@ func (cm *ConcurrencyManager) Acquire(model string) (func(), bool) {
 // monitorMetrics monitors changes in the metrics and logs them appropriately.
 func (cm *ConcurrencyManager) monitorMetrics(metrics *ModelMetrics) {
 	for {
-		time.Sleep(500 * time.Millisecond) // Check twice every second
+		time.Sleep(500 * time.Millisecond)
 
 		metrics.mu.Lock()
 		currentTime := time.Now()
@@ -110,8 +109,6 @@ func (cm *ConcurrencyManager) monitorMetrics(metrics *ModelMetrics) {
 		metrics.mu.Unlock()
 	}
 }
-
-// Methods for ModelMetrics
 
 func (m *ModelMetrics) incrementQueue() {
 	m.mu.Lock()

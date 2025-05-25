@@ -76,13 +76,11 @@ func main() {
 		log.Fatalf(`Failed to load config: %s`, err)
 	}
 
-	// Initialize the ConcurrencyManager with model configurations
 	defaultConcurrency := 100
 	concurrencyManager := manager.NewConcurrencyManager(configData.Models, defaultConcurrency)
 
 	httpHandler := handler.NewHTTPHandler(concurrencyManager, configData.BackendURL)
 
-	// Listen for OS signals for graceful shutdown.
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
@@ -97,7 +95,6 @@ func main() {
 		}
 	}()
 
-	// Block until a signal is received.
 	<-quit
 	log.Infoln("Shutting down server...")
 	concurrencyManager.Shutdown()
